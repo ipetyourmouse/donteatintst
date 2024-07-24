@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>唔好喺尖沙咀食飯</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Inter"
+      rel="stylesheet"
+    />
+    <style>
+      body {margin: 0; padding: 0;}
+      #map {position: absolute; top: 0; bottom: 0; width: 100%;}
+      .box {line-height: 0.9;}
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      mapboxgl.accessToken = "pk.eyJ1IjoibmV3aXNsYW5kMTIyMyIsImEiOiJjamJqaG5jb3Y0MHVpMnFxZ3IzN3NhbGwzIn0.giv88MrlUsX2WznylrLvwA";
+      const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/newisland1223/ckqnh5gtk44uf18n9rxa2wrvg",
+        center: [114.169258, 22.297378],
+        zoom: 16
+      });
+
+      map.on("click", (event) => {
+        const features = map.queryRenderedFeatures(event.point, {
+          layers: ["data-driven-circles"]
+        });
+        if (!features.length) {
+          return;
+        }
+        const feature = features[0];
+
+        var tier_char;
+        switch(feature.properties.tier){
+          case 1: tier_char = "S"; break;
+          case 2: tier_char = "A"; break;
+          case 3: tier_char = "B"; break;
+          case 4: tier_char = "C"; break;
+          case 5: tier_char = "D"; break;
+        }
+        
+        const popup = new mapboxgl.Popup({
+          offset: [0, -15]
+        }).setLngLat(feature.geometry.coordinates)
+          .setHTML(
+            `<font class="box" style="font-family: 'Inter'"><h3>${feature.properties.name_chi} ${feature.properties.name_eng}</h3><p style="color: grey">${feature.properties.quick_address}&nbsp;&nbsp;‧&nbsp;&nbsp;${tier_char} Tier</p><br><a href="${feature.properties.url_openrice}" target="_blank" rel="noopener noreferrer">More info</a></font>`
+          )
+          .addTo(map);
+      });
+
+    /*map.on("click", (event) => {
+        const features = map.queryRenderedFeatures(event.point, {
+          layers: ["labels"]
+        });
+        if (!features.length) {
+          return;
+        }
+        const feature = features[0];
+
+        var tier_char;
+        switch(feature.properties.tier){
+          case 1: tier_char = "S"; break;
+          case 2: tier_char = "A"; break;
+          case 3: tier_char = "B"; break;
+          case 4: tier_char = "C"; break;
+          case 5: tier_char = "D"; break;
+        }
+        
+        const popup = new mapboxgl.Popup({
+          offset: [0, -15]
+        }).setLngLat(feature.geometry.coordinates)
+          .setHTML(
+            `<font class="box" style="font-family: 'Inter'"><h3>${feature.properties.name_chi} ${feature.properties.name_eng}</h3><p style="color: grey">${feature.properties.quick_address}&nbsp;&nbsp;‧&nbsp;&nbsp;${tier_char} Tier</p><br><a href="${feature.properties.url_openrice}" target="_blank" rel="noopener noreferrer">More info</a></font>`
+          )
+          .addTo(map);
+      });*/
+    </script>
+  </body>
+</html>
