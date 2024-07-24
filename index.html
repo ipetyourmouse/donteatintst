@@ -32,7 +32,7 @@
 
       map.on("click", (event) => {
         const features = map.queryRenderedFeatures(event.point, {
-          layers: ["data-driven-circles"]
+          layers: ["data-driven-circles", "labels"]
         });
         if (!features.length) {
           return;
